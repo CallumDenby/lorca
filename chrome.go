@@ -438,6 +438,28 @@ func (c *chrome) bounds() (Bounds, error) {
 	return bounds.Bounds, err
 }
 
+// Cookies shows setting for network cookies
+type Cookies struct {
+	Domain   string  `json:"domain"`
+	Expires  float32 `json:"expires"`
+	HTTPOnly bool    `json:"httpOnly"`
+	Name     string  `json:"name"`
+	Path     string  `json:"path"`
+	Secure   bool    `json:"secure"`
+	Session  bool    `json:"session"`
+	Size     int     `json:"size"`
+	Value    string  `json:"value"`
+}
+
+func (c *chrome) cookies() ([]Cookies, error) {
+	result, err := c.send("Network.getAllCookies", h{})
+	cookies := struct {
+		Cookies []Cookies
+	}{}
+	err = json.Unmarshal(result, &cookies)
+	return cookies.Cookies, err
+}
+
 func (c *chrome) pdf(width, height int) ([]byte, error) {
 	result, err := c.send("Page.printToPDF", h{
 		"paperWidth":  float32(width) / 96,
