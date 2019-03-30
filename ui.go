@@ -12,6 +12,7 @@ import (
 // UI interface allows talking to the HTML5 UI from Go.
 type UI interface {
 	Load(url string) error
+	Cookies() ([]Cookies, error)
 	Bounds() (Bounds, error)
 	SetBounds(Bounds) error
 	Bind(name string, f interface{}) error
